@@ -15,6 +15,23 @@ def check_if_text(stream: BufferedReader, sample_size: int) -> bool:
     return True
 
 
+def check_signature_match(stream: BufferedReader, *signatures: bytes) -> bool:
+    if len(signatures) == 0:
+        return False
+
+    stream.seek(0)
+
+    for sig in signatures:
+        sig_len = len(sig)
+        read = stream.read(sig_len)
+        stream.seek(0)
+
+        if len(read) == sig_len:
+            if sig == read:
+                return True
+    return False
+
+
 def guess_file(file_path: Path) -> ContentGuess:
     category = FileTypes.BINARY
     ext = file_path.suffix.lower().removeprefix(".")
@@ -31,13 +48,12 @@ def guess_file(file_path: Path) -> ContentGuess:
 
         if sig:
             # has a signature, so check that
-            sig_length = len(sig)
             with open(file_path, "rb") as fo:
-                read = fo.read(sig_length)
-                if len(read) == sig_length:
-                    if sig == read:
-                        content_ext = ext
-                        category = type_
+                if not isinstance(sig, tuple):
+                    sig = (sig,)
+                if check_signature_match(fo, *sig):
+                    content_ext = ext
+                    category = type_
         else:
             # has no signature
             is_text = None

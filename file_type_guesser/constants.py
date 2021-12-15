@@ -2,27 +2,33 @@ from . import signatures as sig
 from .types import FileTypes
 
 __all__ = [
-    "FILE_SIGNATURES_WITH_EXTENTION",
     "EXTENTION_WITH_TYPE_AND_SIG",
     "EXT_ALSO_KNOWN_AS",
     "DEFAULT_SAMPLE_SIZE",
 ]
 
-# known signatures (inital part of file) and their related extention
-FILE_SIGNATURES_WITH_EXTENTION: dict[bytes, str] = {
-    sig.SIG_JPG: "jpg",
-}
-
-EXTENTION_WITH_TYPE_AND_SIG: dict[str, tuple[FileTypes, bytes]] = {
+# each known extention related to their type and signature(s) if they have one
+EXTENTION_WITH_TYPE_AND_SIG: dict[str, tuple[FileTypes, bytes | tuple[bytes] | None]] = {
+    # images
+    "bmp": (FileTypes.IMAGE, sig.SIG_BMP),
+    "exr": (FileTypes.IMAGE, sig.SIG_EXR),
+    "gif": (FileTypes.IMAGE, sig.SIG_GIF),
+    "hdr": (FileTypes.IMAGE, sig.SIG_HDR),
     "jpg": (FileTypes.IMAGE, sig.SIG_JPG),
-    "txt": (FileTypes.TEXT, None),
+    "png": (FileTypes.IMAGE, sig.SIG_PNG),
+    "tiff": (FileTypes.IMAGE, sig.SIG_TIFF),
+    "tga": (FileTypes.IMAGE, None),
+    # plain text
     "md": (FileTypes.TEXT, None),
+    "txt": (FileTypes.TEXT, None),
 }
 
 # allows for multiple extention for one file type
 EXT_ALSO_KNOWN_AS: dict[str, str] = {
+    # images
     "jpe": "jpg",
     "jpeg": "jpg",
+    "tif": "tiff",
 }
 
 # size of the sample when reading from a stream
