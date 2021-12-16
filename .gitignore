@@ -3,8 +3,12 @@
 ~$*
 
 .vscode
+.venv/
 
 __pycache__
 /dist
 /build
 /*.egg-info
+.coverage
+.pytest_cache
+reports/

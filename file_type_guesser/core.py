@@ -113,7 +113,7 @@ def guess(file_path: Path | str, stream: Optional[BufferedReader] = None) -> Con
     return ContentGuess(category, ext, content_ext)
 
 
-def guess_file(file_path: Path) -> ContentGuess:
+def guess_file(file_path: Path) -> ContentGuess:  # pragma: no cover
     """
     Make a guess of file type with given file path
 
@@ -123,7 +123,7 @@ def guess_file(file_path: Path) -> ContentGuess:
     return guess(file_path)
 
 
-def guess_stream(file_path: Path, stream: BufferedReader) -> ContentGuess:
+def guess_stream(file_path: Path, stream: BufferedReader) -> ContentGuess:  # pragma: no cover
     """
     Make a guess with given file, using given stream for content
 
