@@ -3,12 +3,13 @@ from pathlib import Path
 from typing import Optional
 
 from .constants import (DEFAULT_SAMPLE_SIZE, EXT_ALSO_KNOWN_AS,
-                        EXTENTION_WITH_TYPE_AND_SIG)
-from .types import ContentGuess, FileTypes
+                        EXTENTION_WITH_FILE_INFO)
+from .types import ContentGuess, FileInfo, FileTypes
 
 __all__ = [
     "check_if_text", "check_signature_match",
-    "guess", "guess_file", "guess_stream",
+    "find_file_info", "guess",
+    "guess_file", "guess_stream",
 ]
 
 
@@ -30,20 +31,24 @@ def check_if_text(stream: BufferedReader, sample_size: int) -> bool:
     return True
 
 
-def check_signature_match(stream: BufferedReader, *signatures: bytes) -> bool:
+def check_signature_match(stream: BufferedReader, file_info: FileInfo) -> bool:
     """
     Check whether a stream matches given signatures
 
         :param stream: The stream
-        :return: Whether a signature has matched
+        :param file_info: The files info to match to
+        :return: Whether it matched
     """
-    if len(signatures) == 0:
+    if len(file_info.signatures_as_tuple) == 0:
         return False
 
     stream.seek(0)
 
-    for sig in signatures:
+    for sig in file_info.signatures_as_tuple:
         sig_len = len(sig)
+        if file_info.bytes_offset:
+            # move to offset before read
+            stream.seek(file_info.bytes_offset)
         read = stream.read(sig_len)
         stream.seek(0)
 
@@ -51,6 +56,23 @@ def check_signature_match(stream: BufferedReader, *signatures: bytes) -> bool:
             if sig == read:
                 return True
     return False
+
+
+def find_file_info(ext: str) -> tuple[str, FileInfo]:
+    """
+    Get the extention and file type
+    info for the given extention
+
+        :param ext: The files extention
+        :return: the recognised extention and file type info
+    """
+    file_type_info = EXTENTION_WITH_FILE_INFO.get(ext, None)
+    if file_type_info is None:
+        actual_ext = EXT_ALSO_KNOWN_AS.get(ext, None)
+        if actual_ext:
+            ext = actual_ext
+            file_type_info = EXTENTION_WITH_FILE_INFO.get(ext, None)
+    return ext, file_type_info
 
 
 def guess(file_path: Path, stream: Optional[BufferedReader] = None) -> ContentGuess:
@@ -63,35 +85,26 @@ def guess(file_path: Path, stream: Optional[BufferedReader] = None) -> ContentGu
     """
     category = FileTypes.BINARY
     ext = file_path.suffix.lower().removeprefix(".")
-    type_and_sig = EXTENTION_WITH_TYPE_AND_SIG.get(ext, None)
-    if type_and_sig is None:
-        actual_ext = EXT_ALSO_KNOWN_AS.get(ext, None)
-        if actual_ext:
-            ext = actual_ext
-            type_and_sig = EXTENTION_WITH_TYPE_AND_SIG.get(ext, None)
     content_ext = None
+    ext, file_type_info = find_file_info(ext)
 
-    if type_and_sig is not None:
-        type_, sig = type_and_sig
-
-        if sig:
+    if file_type_info is not None:
+        # a recogised file type
+        if file_type_info.signatures is not None:
             # has a signature, so check that
             with stream if stream is not None else open(file_path, "rb") as fo:
-                if not isinstance(sig, tuple):
-                    sig = (sig,)
-                if check_signature_match(fo, *sig):
+                if check_signature_match(fo, file_type_info):
                     content_ext = ext
-                    category = type_
-
+                    category = file_type_info.type_
         else:
             # has no signature
             is_text = None
             with stream if stream is not None else open(file_path, "rb") as fo:
                 is_text = check_if_text(fo, DEFAULT_SAMPLE_SIZE)
-            if ((type_ == FileTypes.TEXT and is_text is True) or
-                    (type_ != FileTypes.TEXT and is_text is False)):
+            if ((file_type_info.type_ == FileTypes.TEXT and is_text is True) or
+                    (file_type_info.type_ != FileTypes.TEXT and is_text is False)):
                 content_ext = ext
-                category = type_
+                category = file_type_info.type_
 
     return ContentGuess(category, ext, content_ext)
 

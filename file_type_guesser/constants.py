@@ -1,27 +1,14 @@
 from . import signatures as sig
-from .types import FileTypes
+from .types import FileInfo, FileTypes
 
 __all__ = [
-    "EXTENTION_WITH_TYPE_AND_SIG",
-    "EXT_ALSO_KNOWN_AS",
     "DEFAULT_SAMPLE_SIZE",
+    "EXT_ALSO_KNOWN_AS",
+    "EXTENTION_WITH_FILE_INFO",
 ]
 
-# each known extention related to their type and signature(s) if they have one
-EXTENTION_WITH_TYPE_AND_SIG: dict[str, tuple[FileTypes, bytes | tuple[bytes] | None]] = {
-    # images
-    "bmp": (FileTypes.IMAGE, sig.SIG_BMP),
-    "exr": (FileTypes.IMAGE, sig.SIG_EXR),
-    "gif": (FileTypes.IMAGE, sig.SIG_GIF),
-    "hdr": (FileTypes.IMAGE, sig.SIG_HDR),
-    "jpg": (FileTypes.IMAGE, sig.SIG_JPG),
-    "png": (FileTypes.IMAGE, sig.SIG_PNG),
-    "tiff": (FileTypes.IMAGE, sig.SIG_TIFF),
-    "tga": (FileTypes.IMAGE, None),
-    # plain text
-    "md": (FileTypes.TEXT, None),
-    "txt": (FileTypes.TEXT, None),
-}
+# size of the sample when reading from a stream
+DEFAULT_SAMPLE_SIZE = 100
 
 # allows for multiple extention for one file type
 EXT_ALSO_KNOWN_AS: dict[str, str] = {
@@ -31,5 +18,20 @@ EXT_ALSO_KNOWN_AS: dict[str, str] = {
     "tif": "tiff",
 }
 
-# size of the sample when reading from a stream
-DEFAULT_SAMPLE_SIZE = 100
+# each known extention related to their file info
+EXTENTION_WITH_FILE_INFO: dict[str, FileInfo] = {
+    # images
+    "bmp": FileInfo(FileTypes.IMAGE, sig.SIG_BMP),
+    "exr": FileInfo(FileTypes.IMAGE, sig.SIG_EXR),
+    "gif": FileInfo(FileTypes.IMAGE, sig.SIG_GIF),
+    "hdr": FileInfo(FileTypes.IMAGE, sig.SIG_HDR),
+    "jpg": FileInfo(FileTypes.IMAGE, sig.SIG_JPG),
+    "png": FileInfo(FileTypes.IMAGE, sig.SIG_PNG),
+    "tiff": FileInfo(FileTypes.IMAGE, sig.SIG_TIFF),
+    "tga": FileInfo(FileTypes.IMAGE),
+    # video
+    "mp4": FileInfo(FileTypes.VIDEO, sig.SIG_MP4, 4),
+    # plain text
+    "md": FileInfo(FileTypes.TEXT),
+    "txt": FileInfo(FileTypes.TEXT),
+}
