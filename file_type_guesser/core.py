@@ -75,7 +75,7 @@ def find_file_info(ext: str) -> tuple[str, FileInfo]:
     return ext, file_type_info
 
 
-def guess(file_path: Path, stream: Optional[BufferedReader] = None) -> ContentGuess:
+def guess(file_path: Path | str, stream: Optional[BufferedReader] = None) -> ContentGuess:
     """
     Make a guess with given file, using given stream for content if provided
 
@@ -83,6 +83,10 @@ def guess(file_path: Path, stream: Optional[BufferedReader] = None) -> ContentGu
         :param stream: A stream to use, defaults to None
         :return: The content guess
     """
+    if isinstance(file_path, str):
+        # allow for strings to be passed in
+        file_path = Path(file_path)
+
     category = FileTypes.BINARY
     ext = file_path.suffix.lower().removeprefix(".")
     content_ext = None
