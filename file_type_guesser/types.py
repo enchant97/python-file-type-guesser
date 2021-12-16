@@ -42,6 +42,8 @@ class FileInfo:
 
     @property
     def signatures_as_tuple(self) -> tuple[bytes]:
-        if not isinstance(self.signatures, tuple):
+        if self.signatures is None:
+            return tuple()
+        elif not isinstance(self.signatures, tuple):
             return (self.signatures,)
         return self.signatures

@@ -40,7 +40,7 @@ def check_signature_match(stream: BufferedReader, file_info: FileInfo) -> bool:
         :return: Whether it matched
     """
     if len(file_info.signatures_as_tuple) == 0:
-        return False
+        return True
 
     stream.seek(0)
 
