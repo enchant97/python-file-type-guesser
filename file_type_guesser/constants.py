@@ -16,6 +16,10 @@ EXT_ALSO_KNOWN_AS: dict[str, str] = {
     "jpe": "jpg",
     "jpeg": "jpg",
     "tif": "tiff",
+    # videos
+    "mpeg": "mpg",
+    "vob": "mpg",
+    "webm": "mkv",
 }
 
 # each known extention related to their file info
@@ -30,7 +34,10 @@ EXTENTION_WITH_FILE_INFO: dict[str, FileInfo] = {
     "tiff": FileInfo(FileTypes.IMAGE, sig.SIG_TIFF),
     "tga": FileInfo(FileTypes.IMAGE),
     # video
+    "mov": FileInfo(FileTypes.VIDEO, sig.SIG_MOV, 4),
     "mp4": FileInfo(FileTypes.VIDEO, sig.SIG_MP4, 4),
+    "mpg": FileInfo(FileTypes.VIDEO, sig.SIG_MPG),
+    "mkv": FileInfo(FileTypes.VIDEO, sig.SIG_MKV),
     # plain text
     "md": FileInfo(FileTypes.TEXT),
     "txt": FileInfo(FileTypes.TEXT),
