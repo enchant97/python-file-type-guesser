@@ -1,3 +1,5 @@
+# binary (other)
+SIG_ZIP = b"\x50\x4B\x03\x04"
 # images
 SIG_BMP = b"\x42\x4D"
 SIG_EXR = b"\x76\x2F\x31\x01"
@@ -28,3 +30,9 @@ SIG_MP4 = (
 )
 SIG_MPG = b"\x00\x00\x01"
 SIG_MKV = b"\x1A\x45\xDF\xA3"
+# document
+SIG_OOXML = b"\x50\x4B\x03\x04\x14\x00\x06\x00"
+SIG_OD = SIG_ZIP
+SIG_OO = SIG_ZIP
+SIG_PDF = b"\x25\x50\x44\x46"
+SIG_XPS = SIG_ZIP

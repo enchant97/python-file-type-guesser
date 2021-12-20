@@ -19,6 +19,7 @@ class FileTypes(IntEnum):
     IMAGE = auto()
     VIDEO = auto()
     AUDIO = auto()
+    DOCUMENT = auto()
 
 
 @dataclass
