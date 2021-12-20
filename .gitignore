@@ -12,3 +12,5 @@ __pycache__
 .coverage
 .pytest_cache
 reports/
+
+docs/_build

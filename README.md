@@ -1,6 +1,8 @@
 # File Type Guesser
 [![Test](https://github.com/enchant97/python-file-type-guesser/actions/workflows/python-test.yml/badge.svg)](https://github.com/enchant97/python-file-type-guesser/actions/workflows/python-test.yml)
-![Latest Release](https://img.shields.io/github/v/release/enchant97/python-file-type-guesser)
+![PyPI](https://img.shields.io/pypi/v/file-type-guesser)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/file-type-guesser)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/file-type-guesser)
 ![License MIT](https://img.shields.io/github/license/enchant97/python-file-type-guesser)
 ![Open Issues](https://img.shields.io/github/issues/enchant97/python-file-type-guesser)
 ![Line Count](https://img.shields.io/tokei/lines/github/enchant97/python-file-type-guesser)
